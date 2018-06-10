@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Word_Guess_Game
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             StartMenu();
         }
@@ -31,14 +32,14 @@ namespace Word_Guess_Game
             //}
             CreateFile();
             ReadFile();
-            UpdateFile();
+            GetUserUpdate();
             DeleteFile();
         }
 
         /// <summary>
         /// Create a populated file with Systems.IO
         /// </summary>
-        public static void CreateFile()
+        public static bool CreateFile()
         {
             string path = "../../../GameWords.txt";
             //if a file doesn't exist, create it
@@ -49,12 +50,13 @@ namespace Word_Guess_Game
                     sw.Write("cat\ndog\nman\nbear\npig");
                 }
             }
+            return true;
         }
 
         /// <summary>
         /// Read a file with Systems.IO
         /// </summary>
-        public static void ReadFile()
+        public static bool ReadFile()
         {
             string path = "../../../GameWords.txt";
             using (StreamReader sr = File.OpenText(path))
@@ -69,35 +71,62 @@ namespace Word_Guess_Game
                 {
                     string[] gameText = File.ReadAllLines(path);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("Something went wrong.");
                 }
             }
+            return true;
         }
 
         /// <summary>
-        /// Update a file with Systems.IO
-        /// TO DO: split this up to 2 methods where the user can enter a new word (for unit testing)
+        /// Gets user input and checks if input is only letters.
         /// </summary>
-        public static void UpdateFile()
+        public static void GetUserUpdate()
+        {
+            Console.WriteLine("Enter a word");
+            string userUpdateForFile = Console.ReadLine();
+            //The Linq library is needed because the Char.IsLetter() method
+            //is used to verify that input are only letters
+            bool allLetters = userUpdateForFile.All(c => Char.IsLetter(c));
+            if (allLetters)
+            {
+                UpdateFile(userUpdateForFile);
+            }
+            else Console.WriteLine("NOT all letters");
+        }
+
+        /// <summary>
+        /// If user input is only letters, then text will be updated
+        /// </summary>
+        /// <returns></returns>
+        public static string UpdateFile(string userUpdateForFile)
         {
             string path = "../../../GameWords.txt";
             using (StreamWriter sw = File.AppendText(path))
             {
-                sw.WriteLine("\nahoy");
+                sw.WriteLine("\n" + userUpdateForFile);
             }
+
+            return "File updated!";
         }
 
         /// <summary>
         /// Delete a file with Systems.IO
         /// </summary>
-        public static void DeleteFile()
+        public static bool DeleteFile()
         {
             string path = "../../../GameWords.txt";
-            File.Delete(path);
-            Console.WriteLine("File Deleted!!");
-            Console.Read();
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                Console.WriteLine("File Deleted!");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
