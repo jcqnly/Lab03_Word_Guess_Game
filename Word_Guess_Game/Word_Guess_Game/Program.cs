@@ -66,13 +66,13 @@ namespace Word_Guess_Game
             string path = "../../../GameWords.txt";
             try
             {
-                //read words from the file and store it
+                //read words from the file and stores it
                 string[] gameText = File.ReadAllLines(path);
-                //generate a random number based on the length of the list
+                //generate a random number based on the length of the word list
                 Random word = new Random();
                 int value = word.Next(gameText.Length);
                 string randomWord = gameText[value];
-                //send off the chosen word to be replaced by underscore
+                //send off the random word to be replaced by underscore
                 //to start the guessing process
                 DisplayWord(randomWord);
             }
@@ -89,13 +89,42 @@ namespace Word_Guess_Game
         /// <param name="randomWord"></param>
         public static void DisplayWord(string randomWord)
         {
-            int randomWordLength = randomWord.Length;
+            int randomWordLength = randomWord.Length;            
+            for (int i = 0; i <= randomWordLength - 1; i++) Console.Write(" _ ");
+           
+            //this method will take in user guesses
+            GuessingTime(randomWord, randomWordLength);
+        }
+
+        /// <summary>
+        /// If user guesses a letter in the word, the result is stored
+        /// Otherwise, they'll have to keep trying
+        /// </summary>
+        /// <param name="randomWord"></param>
+        public static void GuessingTime(string randomWord, int randomWordLength)
+        {
             Console.WriteLine(randomWord);
-            Console.WriteLine(randomWordLength);
-            for (int i = 0; i <= randomWordLength - 1; i++)
+            Console.WriteLine("\nGuess a letter\n");
+            string guess = Console.ReadLine();
+            //check if user types in more than 1 char and if the letter is contained in the random word
+            if (guess.Length > 1 || !guess.All(c => Char.IsLetter(c)))
             {
-                Console.Write(" _ ");
+                Console.Clear();
+                Console.WriteLine("Guess again");
+                DisplayWord(randomWord);
             }
+            else if (randomWord.Contains(guess))
+            {
+                Console.WriteLine("Excellent guess!");
+                //pass correct letter guess to another method
+                //RevealLetter(guess, randomWord, randomWordLength);
+            }
+            else
+            {
+                Console.WriteLine("Try again");
+                DisplayWord(randomWord);
+            }
+            Console.ReadLine();
         }
 
         /// <summary>
