@@ -24,7 +24,9 @@ namespace Word_Guess_Game
             {
                 switch (selection)
                 {
-                    case 1://add method call to play
+                    case 1:
+                        Console.Clear();
+                        PlayGame();
                         break;
 
                     case 2:
@@ -44,35 +46,91 @@ namespace Word_Guess_Game
                 MainMenu();
             }
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void PlayGame()
+        {
+            //create a file with words by calling this:
+            CreateFile();
+            //method to generate random word from list created at the start
+            SelectWord();
+        }
+
+        /// <summary>
+        /// Select a random word from pre-populated list
+        /// </summary>
+        public static void SelectWord()
+        {
+            string path = "../../../GameWords.txt";
+            try
+            {
+                //read words from the file and store it
+                string[] gameText = File.ReadAllLines(path);
+                //generate a random number based on the length of the list
+                Random word = new Random();
+                int value = word.Next(gameText.Length);
+                string randomWord = gameText[value];
+                //send off the chosen word to be replaced by underscore
+                //to start the guessing process
+                DisplayWord(randomWord);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Something went wrong.");
+            }
+        }
+
+        /// <summary>
+        /// Replace the random word with underscores
+        /// that corresponds to the length of the word
+        /// </summary>
+        /// <param name="randomWord"></param>
+        public static void DisplayWord(string randomWord)
+        {
+            int randomWordLength = randomWord.Length;
+            Console.WriteLine(randomWord);
+            Console.WriteLine(randomWordLength);
+            for (int i = 0; i <= randomWordLength - 1; i++)
+            {
+                Console.Write(" _ ");
+            }
+        }
 
         /// <summary>
         /// Admin Menu with 4 options for the user
         /// </summary>
         public static void AdminMenu()
         {
-            Console.WriteLine("1. Update the list of words\n" +
-                "2. Delete the list of words\n" +
-                "3. Return to the Main Menu\n" +
-                "4. Exit the program");
-            //Checks that the user enters in a number and that the number is between 1-4
-            if (Int32.TryParse(Console.ReadLine(), out int selection) && selection > 0 && selection <= 4)
+            Console.WriteLine("1. View the list of words\n" +
+                "2. Update the list of words\n" +
+                "3. Delete the list of words\n" +
+                "4. Return to the Main Menu\n" +
+                "5. Exit the program");
+            //Checks that the user enters in a number and that the number is between 1-5
+            if (Int32.TryParse(Console.ReadLine(), out int selection) && selection > 0 && selection <= 5)
             {
                 switch (selection)
                 {
                     case 1:
-                        GetUserUpdate();
+                        ReadFile();
                         break;
 
                     case 2:
-                        DeleteFile();
+                        GetUserUpdate();
                         break;
 
                     case 3:
+                        DeleteFile();
+                        break;
+
+                    case 4:
                         Console.Clear();
                         MainMenu();
                         break;
 
-                    case 4:
+                    case 5:
                         Environment.Exit(0);
                         break;
                 }
@@ -110,19 +168,10 @@ namespace Word_Guess_Game
             string path = "../../../GameWords.txt";
             using (StreamReader sr = File.OpenText(path))
             {
-                //string s = "";
-                //while ((s = sr.ReadLine()) != null)
-                //{
-                //    Console.WriteLine(s);
-                //}
-
-                try
+                string s = "";
+                while ((s = sr.ReadLine()) != null)
                 {
-                    string[] gameText = File.ReadAllLines(path);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Something went wrong.");
+                    Console.WriteLine(s + "\n");
                 }
             }
             return true;
@@ -146,7 +195,7 @@ namespace Word_Guess_Game
         }
 
         /// <summary>
-        /// If user input is only letters, then text will be updated
+        /// If user input is only letters, then file will be updated
         /// </summary>
         /// <returns></returns>
         public static string UpdateFile(string userUpdateForFile)
