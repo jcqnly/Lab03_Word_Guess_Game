@@ -34,19 +34,11 @@ This game implements CRUD operations in conjunction with Systems I/O.
 ![]()
 
 ## Plan of Attack
-- [] Main Menu
 - [] Play
-- [] Admin
-- [] Exit
 
-- [] Create File
-- [] Read File
-- [] Randomly select word to output
 - [] _should_ track letters guessed
 - [] guess 1 letter at a time
 - [] If letter is correct, display it
 
-
 - [] Admin Menu
-- [] Update File
-- [] Delete File
+- [] Loop user back for more options
