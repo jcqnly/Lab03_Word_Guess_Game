@@ -48,7 +48,7 @@ namespace Word_Guess_Game
         }
         
         /// <summary>
-        /// 
+        /// Start the game process
         /// </summary>
         public static void PlayGame()
         {
@@ -59,7 +59,7 @@ namespace Word_Guess_Game
         }
 
         /// <summary>
-        /// Select a random word from pre-populated list
+        /// Select a random word from pre-populated list and stores it to an array
         /// </summary>
         public static void SelectWord()
         {
@@ -72,8 +72,6 @@ namespace Word_Guess_Game
                 Random word = new Random();
                 int value = word.Next(gameText.Length);
                 string randomWord = gameText[value];
-                //send off the random word to be replaced by underscore
-                //to start the guessing process
                 DisplayWord(randomWord);
             }
             catch (Exception)
@@ -83,52 +81,97 @@ namespace Word_Guess_Game
         }
 
         /// <summary>
-        /// Replace the random word with underscores
-        /// that corresponds to the length of the word
+        /// Displays the placeholder value for as many letters as there are 
+        /// in the randomly selected word that will be passed to this method
         /// </summary>
         /// <param name="randomWord"></param>
         public static void DisplayWord(string randomWord)
         {
-            int randomWordLength = randomWord.Length;            
-            for (int i = 0; i <= randomWordLength - 1; i++) Console.Write(" _ ");
-           
-            //this method will take in user guesses
-            GuessingTime(randomWord, randomWordLength);
+            //create a char array to store the random word
+            //b/c of strict type, convert to char
+            char[] storeRandomWord = randomWord.ToCharArray();
+            //testing output
+            for (int i = 0; i < storeRandomWord.Length; i++)
+            {
+                Console.WriteLine(storeRandomWord[i]);
+            }
+            //create a placeholder of string type because char type didn't work
+            string placeholder = "X";
+            //create a char array and store the placeholder
+            char[] storeUnderscore = placeholder.ToArray();
+            //create a new char array to hold the array of hidden words
+            char[] wordWithPlaceholder = new char[randomWord.Length];
+            //iterate through and add the placeholder to every spot
+            for (int i = 0; i <= randomWord.Length-1; i++)
+            {
+                wordWithPlaceholder[i] = storeUnderscore[0];
+                Console.Write(wordWithPlaceholder[i]);
+            }
+            //start the guessing process
+            GuessingTime(randomWord, storeRandomWord, wordWithPlaceholder);
         }
 
         /// <summary>
-        /// If user guesses a letter in the word, the result is stored
-        /// Otherwise, they'll have to keep trying
+        /// Checks user guess against what is currently stored as the random word
         /// </summary>
         /// <param name="randomWord"></param>
-        public static void GuessingTime(string randomWord, int randomWordLength)
+        /// <param name="storeRandomWord"></param>
+        /// <param name="wordWithPlaceholder"></param>
+        public static void GuessingTime(string randomWord, char[] storeRandomWord, char[] wordWithPlaceholder)
         {
-            Console.WriteLine(randomWord);
             Console.WriteLine("\nGuess a letter\n");
             string guess = Console.ReadLine();
-            //check if user types in more than 1 char and if the letter is contained in the random word
+            //checks if user types more than a letter and/or number at a time
+            //also checks whether input is a character
             if (guess.Length > 1 || !guess.All(c => Char.IsLetter(c)))
             {
-                Console.Clear();
-                Console.WriteLine("Guess again");
+                Console.WriteLine("Guess again:\n");
+                //call the DisplayWord method and start the process again
                 DisplayWord(randomWord);
-            }
+            } //if that guess is 1 character and the letter is in the word...
             else if (randomWord.Contains(guess))
             {
-                Console.WriteLine("Excellent guess!");
-                //pass correct letter guess to another method
-                //RevealLetter(guess, randomWord, randomWordLength);
+                Console.Clear();
+                //convert the guess from string to char
+                char[] guessAsChar = guess.ToArray();
+                //pass the char-ified guess to the reveal method
+                RevealLetter(randomWord, guessAsChar, storeRandomWord, wordWithPlaceholder);
             }
             else
-            {
+            {   //continue guessing if they guessed incorrectly
+                Console.Clear();
                 Console.WriteLine("Try again");
                 DisplayWord(randomWord);
             }
-            Console.ReadLine();
         }
 
         /// <summary>
-        /// Admin Menu with 4 options for the user
+        /// This will only run if the user guess is in the word in 
+        /// order to reveal where it is within the random word
+        /// </summary>
+        /// <param name="randomWord"></param>
+        /// <param name="guessAsChar"></param>
+        /// <param name="storeRandomWord"></param>
+        /// <param name="wordWithPlaceholder"></param>
+        public static void RevealLetter(string randomWord, char[] guessAsChar, char[] storeRandomWord, char[] wordWithPlaceholder)
+        {
+            for (int i = 0; i <= storeRandomWord.Length - 1; i++)
+            {//checks if the character at that iteration matches the guess
+                if (storeRandomWord[i] == guessAsChar[0])
+                {//if that guess matches, then replace that index with that guess
+                    wordWithPlaceholder[i] = guessAsChar[0];
+                    Console.Write($"You correctly guessed: {guessAsChar[0]}\n");
+                }
+            }
+            //displays the hidden word with the correctly revealed letter
+            for (int i = 0; i <= storeRandomWord.Length - 1; i++)
+            {//checks if the character at that iteration matches the guess
+                Console.Write($"{wordWithPlaceholder[i]} ");
+            }
+        }
+
+        /// <summary>
+        /// Admin Menu with 4 options
         /// </summary>
         public static void AdminMenu()
         {
