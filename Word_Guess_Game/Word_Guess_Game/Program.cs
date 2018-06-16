@@ -316,8 +316,9 @@ namespace Word_Guess_Game
         public static void GetUserDeleteChoice()
         {
             Console.Clear();
-            Console.WriteLine("1. Delete the entire file\n2. Delete a specific word?");
-            if (Int32.TryParse(Console.ReadLine(), out int selection) && selection > 0 && selection <= 2)
+            string path = "../../../GameWords.txt";
+            Console.WriteLine("1. Delete the entire file\n2. Delete a specific word\n3. Admin Menu");
+            if (Int32.TryParse(Console.ReadLine(), out int selection) && selection > 0 && selection <= 3)
             {
                 switch (selection)
                 {
@@ -327,9 +328,23 @@ namespace Word_Guess_Game
 
                     case 2:
                         Console.Clear();
-                        ReadFile();
-                        Console.WriteLine("Which word would you like to delete?");
-                        DeleteSpecificWord();
+                        //show the user the words to delete
+                        using (StreamReader sr = File.OpenText(path))
+                        {
+                            string s = "";
+                            while ((s = sr.ReadLine()) != null)
+                            {
+                                Console.WriteLine(s + "\n");
+                            }
+                        }
+                        Console.WriteLine("Which of those word would you like to delete?");
+                        string specificWordToDelete = Console.ReadLine();
+                        string trimWordToDelete = specificWordToDelete.Trim().ToLower();
+                        DeleteSpecificWord(specificWordToDelete);
+                        break;
+
+                    case 3:
+                        AdminMenu();
                         break;
 
                     default:
@@ -342,11 +357,43 @@ namespace Word_Guess_Game
         /// <summary>
         /// Delete a specific word that the user requests
         /// </summary>
-        public static void DeleteSpecificWord()
+        public static void DeleteSpecificWord(string trimWordToDelete)
         {
             string path = "../../../GameWords.txt";
             Console.Clear();
-            
+            string[] wordList = File.ReadAllText(path).Split('\n');
+            for (int i= 0; i < wordList.Length; i++)
+            {
+                if (wordList[i] == trimWordToDelete)
+                {
+                    //init a new array to the length of the current array minus the soon-to-be-deleted word
+                    string[] trimmedList = new string[wordList.Length - 1];
+                    //j is the index marker for the new array
+                    //and k is the index marker for the old array
+                    for (int j = 0, k = 0; j < trimmedList.Length; j++, k++)
+                    {   //when the index of the new array reaches i, which is the index of the soon-to-be-deleted word
+                        if (j == i)
+                        { //increase the index of the new array
+                            k++;
+                        }
+                        //continue populating the new array with the contents of the old array
+                        trimmedList[j] = wordList[k];
+                    }
+                    Console.WriteLine($"{wordList[i]} has been deleted!\nThe list is now");
+                    for (int m = 0; m < trimmedList.Length; m++)
+                    {
+                        Console.WriteLine($"{trimmedList[m]}");
+                    }
+                    Console.Read();
+                    AdminMenu();
+                }
+                else
+                {
+                    Console.WriteLine("That word is not in the list.  Try again.");
+                    GetUserDeleteChoice();
+                }
+            }
+
         }
 
         /// <summary>
