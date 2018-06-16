@@ -171,13 +171,14 @@ namespace Word_Guess_Game
             for (int i = 0; i <= wordWithPlaceholder.Length - 1; i++)
             {
                 if (wordWithPlaceholder[i] == storeUnderscore[0])
-                {
+                {   //as long as an X remains, the user will be prompted to continue guessing
                     while (wordWithPlaceholder[i] != storeUnderscore[0]);
                     {
                         GuessingTime(randomWord, storeRandomWord, wordWithPlaceholder); 
                     }
                 } 
             }
+            //otherwise, they will have guessed the correct word and be routed back to the maim menu
             Console.Clear();
             Console.WriteLine($"Congratulations! The word was {randomWord}.");
             Console.Read();
@@ -209,7 +210,7 @@ namespace Word_Guess_Game
                         break;
 
                     case 3:
-                        DeleteFile();
+                        GetUserDeleteChoice();
                         break;
 
                     case 4:
@@ -314,6 +315,7 @@ namespace Word_Guess_Game
         /// </summary>
         public static void GetUserDeleteChoice()
         {
+            Console.Clear();
             Console.WriteLine("1. Delete the entire file\n2. Delete a specific word?");
             if (Int32.TryParse(Console.ReadLine(), out int selection) && selection > 0 && selection <= 2)
             {
@@ -324,6 +326,9 @@ namespace Word_Guess_Game
                         break;
 
                     case 2:
+                        Console.Clear();
+                        ReadFile();
+                        Console.WriteLine("Which word would you like to delete?");
                         DeleteSpecificWord();
                         break;
 
@@ -334,13 +339,18 @@ namespace Word_Guess_Game
             }
         }
 
+        /// <summary>
+        /// Delete a specific word that the user requests
+        /// </summary>
         public static void DeleteSpecificWord()
         {
-
+            string path = "../../../GameWords.txt";
+            Console.Clear();
+            
         }
 
         /// <summary>
-        /// Delete a file with Systems.IO
+        /// Delete the entire file
         /// </summary>
         public static bool DeleteFile()
         {
