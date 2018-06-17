@@ -191,9 +191,10 @@ namespace Word_Guess_Game
         /// </summary>
         public static void AdminMenu()
         {
+            string path = "../../../GameWords.txt";
             Console.WriteLine("1. View the list of words\n" +
                 "2. Update the list of words\n" +
-                "3. Delete the list of words\n" +
+                "3. Delete\n" +
                 "4. Return to the Main Menu\n" +
                 "5. Exit the program");
             //Checks that the user enters in a number and that the number is between 1-5
@@ -206,6 +207,12 @@ namespace Word_Guess_Game
                         break;
 
                     case 2:
+                        Console.Clear();
+                        if (!File.Exists(path))
+                        {
+                            Console.WriteLine("No file with which to update.");
+                            AdminMenu();
+                        }
                         GetUserUpdate();
                         break;
 
@@ -256,12 +263,6 @@ namespace Word_Guess_Game
         {
             Console.Clear();
             string path = "../../../GameWords.txt";
-            //this accounts for when the user chooses the admin option before playing
-            //this will create the file to read from
-            if (!File.Exists(path))
-            {
-                CreateFile();
-            }
             //writes the list of words to the console.
             using (StreamReader sr = File.OpenText(path))
             {
@@ -271,8 +272,6 @@ namespace Word_Guess_Game
                     Console.WriteLine(s + "\n");
                 }
             }
-            Console.Read();
-            AdminMenu();
             return true;
         }
 
@@ -281,6 +280,7 @@ namespace Word_Guess_Game
         /// </summary>
         public static void GetUserUpdate()
         {
+            Console.Clear();
             Console.WriteLine("Enter a word");
             string userUpdateForFile = Console.ReadLine();
             //The Linq library is needed because the Char.IsLetter() method
@@ -290,7 +290,11 @@ namespace Word_Guess_Game
             {
                 UpdateFile(userUpdateForFile);
             }
-            else Console.WriteLine("NOT all letters");
+            else
+            {
+                Console.WriteLine("NOT all letters.  Try again");
+                GetUserUpdate();
+            }
         }
 
         /// <summary>
@@ -299,14 +303,13 @@ namespace Word_Guess_Game
         /// <returns></returns>
         public static string UpdateFile(string userUpdateForFile)
         {
-            Console.Clear();
             string path = "../../../GameWords.txt";
+            Console.Clear();
             using (StreamWriter sw = File.AppendText(path))
             {
-                sw.WriteLine("\n" + userUpdateForFile);
+                sw.WriteLine(userUpdateForFile);
             }
             Console.WriteLine("File update!");
-            AdminMenu();
             return "File updated!";
         }
 
@@ -328,6 +331,11 @@ namespace Word_Guess_Game
 
                     case 2:
                         Console.Clear();
+                        if (!File.Exists(path))
+                        {
+                            Console.WriteLine("No file to delete.");
+                            AdminMenu();
+                        }
                         //show the user the words to delete
                         using (StreamReader sr = File.OpenText(path))
                         {
@@ -340,6 +348,8 @@ namespace Word_Guess_Game
                         Console.WriteLine("Which of those word would you like to delete?");
                         string specificWordToDelete = Console.ReadLine();
                         string trimWordToDelete = specificWordToDelete.Trim().ToLower();
+                        Console.WriteLine($"the word to delete is {trimWordToDelete}");
+                        Console.Read();
                         DeleteSpecificWord(specificWordToDelete);
                         break;
 
@@ -361,39 +371,42 @@ namespace Word_Guess_Game
         {
             string path = "../../../GameWords.txt";
             Console.Clear();
+
             string[] wordList = File.ReadAllText(path).Split('\n');
+            string[] trimmedList = new string[wordList.Length - 1];
+
             for (int i= 0; i < wordList.Length; i++)
             {
                 if (wordList[i] == trimWordToDelete)
                 {
                     //init a new array to the length of the current array minus the soon-to-be-deleted word
-                    string[] trimmedList = new string[wordList.Length - 1];
                     //j is the index marker for the new array
                     //and k is the index marker for the old array
                     for (int j = 0, k = 0; j < trimmedList.Length; j++, k++)
                     {   //when the index of the new array reaches i, which is the index of the soon-to-be-deleted word
                         if (j == i)
-                        { //increase the index of the new array
+                        { //increase the index of the new array as a way to 'shorten' its length
                             k++;
                         }
                         //continue populating the new array with the contents of the old array
                         trimmedList[j] = wordList[k];
                     }
-                    Console.WriteLine($"{wordList[i]} has been deleted!\nThe list is now");
-                    for (int m = 0; m < trimmedList.Length; m++)
+                    Console.WriteLine($"{wordList[i]} has been deleted!\n");
+                    //delete the current file, so that...
+                    File.Delete(path);
+                    //the updated list can be written to the file
+                    for (int m = 0; m <= trimmedList.Length - 1; m++)
                     {
                         Console.WriteLine($"{trimmedList[m]}");
+                        using (StreamWriter sw = File.AppendText(path))
+                        {
+                            sw.WriteLine($"{trimmedList[m]}");
+                        }
                     }
-                    Console.Read();
-                    AdminMenu();
-                }
-                else
-                {
-                    Console.WriteLine("That word is not in the list.  Try again.");
-                    GetUserDeleteChoice();
-                }
-            }
-
+                }  
+            } 
+            Console.Read();
+            MainMenu();
         }
 
         /// <summary>
@@ -407,13 +420,18 @@ namespace Word_Guess_Game
                 File.Delete(path);
                 Console.Clear();
                 Console.WriteLine("File Deleted!");
-                AdminMenu();
                 return true;
+            }
+            else if (!File.Exists(path))
+            {
+                Console.Clear();
+                Console.WriteLine("No file to delete.");
+                Console.Read();
+                return false;
             }
             else
             {
-                Console.WriteLine("No file to delete.");
-                return false;
+                return true;
             }
         }
     }
