@@ -40,28 +40,28 @@ or exit the program.
 
 ## Screenshot Walk Through
 1: Main Menu
-![Main Menu](/mainMenu.png)
+![Main Menu](/assets//mainMenu.png)
 
 2: Game Play
-![Start Of Guessing Game](/guessingTime.png)
+![Start Of Guessing Game](/assets//guessingTime.png)
 
 3: If the user is correct, ask them to guess another letter
-![Correct Guess](/guessingCorrect.png)
+![Correct Guess](/assets//guessingCorrect.png)
 
 4: If the user is not correct, ask them to guess again
-![Wrong Guess](/guessingWrong.png)
+![Wrong Guess](/assets//guessingWrong.png)
 
 5: Let the user know when they have correctly guessed all letters.
-![All Correctly Guessed Letters](/congrats.png)
+![All Correctly Guessed Letters](/assets//congrats.png)
 
 6: Admin Options
-![Admin Options](/admin.png)
+![Admin Options](/assets//admin.png)
 
 7: View List of Words
-![View List](/view.png)
+![View List](/assets//view.png)
 
 8: Delete a Word
-![Delete Word](/deleteAWord.png)
+![Delete Word](/assets//deleteAWord.png)
 
 9: List After a Deletion
-![List After a Deletion](/afterDelete.png)
+![List After a Deletion](/assets/afterDelete.png)
