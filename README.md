@@ -39,20 +39,29 @@ or exit the program.
 ---
 
 ## Screenshot Walk Through
-1: Show the hidden word
-![]()
+1: Main Menu
+![Main Menu](/mainMenu.png)
 
-2: Prompt user for a letter guess
-![]()
+2: Game Play
+![Start Of Guessing Game](/guessingTime.png)
 
 3: If the user is correct, ask them to guess another letter
-![]()
+![Correct Guess](/guessingCorrect.png)
 
 4: If the user is not correct, ask them to guess again
-![]()
+![Wrong Guess](/guessingWrong.png)
 
-5: Repeat the guessing process until the user is correct
-![]()
+5: Let the user know when they have correctly guessed all letters.
+![All Correctly Guessed Letters](/congrats.png)
 
-6: When they are done, ask if they want to play again
-![]()
+6: Admin Options
+![Admin Options](/admin.png)
+
+7: View List of Words
+![View List](/view.png)
+
+8: Delete a Word
+![Delete Word](/deleteAWord.png)
+
+9: List After a Deletion
+![List After a Deletion](/afterDelete.png)
