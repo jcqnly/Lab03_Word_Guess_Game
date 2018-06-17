@@ -73,4 +73,4 @@ or exit the program.
 
 9: List After a Deletion
 
-![List After a Deletion](/assets/afterDelete.png)
+![Deletion Success](/assets/afterDelete.png)
