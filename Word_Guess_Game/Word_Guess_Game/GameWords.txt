@@ -1,0 +1,10 @@
+cat
+
+dog
+
+man
+
+bear
+
+pig
+
